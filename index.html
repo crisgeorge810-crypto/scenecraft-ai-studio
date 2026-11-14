@@ -1,537 +1,132 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#081426">
-<meta name="description" content="SceneCraft AI Studio - Create, edit, produce and share movies.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081a32">
+<meta name="description" content="SceneCraft AI Studio — create, plan and edit video projects offline.">
 <link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
 <title>SceneCraft AI Studio</title>
-<style>
-:root {
- --bg:#081426;--panel:#10213a;--panel2:#152b47;
- --gold:#e9bd68;--text:#f4f5f8;--muted:#9cacc2;
- --line:#263c59;--blue:#3988e8;--green:#43c58b;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-header{height:70px;background:#0b192c;border-bottom:1px solid var(--line);
-display:flex;align-items:center;justify-content:space-between;padding:0 20px;
-position:sticky;top:0;z-index:10}
-.brand{display:flex;align-items:center;gap:11px}
-.logo{width:43px;height:43px;border:2px solid var(--gold);border-radius:10px;
-display:grid;place-items:center;color:var(--gold);font-size:23px}
-.brand strong{display:block;font-size:17px}
-.brand small{color:var(--gold);font-size:11px;letter-spacing:2px}
-.status{font-size:12px;color:var(--green)}
-.layout{display:flex;min-height:calc(100vh - 70px)}
-nav{width:215px;background:#0b192c;border-right:1px solid var(--line);
-padding:16px 12px;flex-shrink:0}
-.nav-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;padding:13px 10px 8px}
-.nav-btn{width:100%;padding:12px;border:0;border-radius:8px;background:transparent;
-color:#bdc9d8;text-align:left;margin:2px 0;font-size:13px}
-.nav-btn:hover,.nav-btn.active{background:var(--panel2);color:var(--gold)}
-main{flex:1;padding:25px;min-width:0;max-width:1500px;margin:auto;width:100%}
-.page{display:none}
-.page.active{display:block}
-h1{font-size:27px;margin:0 0 8px}
-h2{font-size:18px;margin:0 0 15px}
-p{color:var(--muted);line-height:1.6}
-.gold{color:var(--gold)}
-.hero{background:linear-gradient(120deg,#172f50,#10213a 65%,#302a25);
-border:1px solid #344b68;border-radius:16px;padding:26px;margin-bottom:22px}
-.hero h1{font-size:29px}
-.hero p{max-width:650px}
-.btn{border:0;border-radius:8px;padding:11px 16px;background:var(--gold);
-color:#172033;font-weight:bold;font-size:13px;margin:3px}
-.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
-.btn.blue{background:var(--blue);color:white}
-.btn.danger{background:#713e49;color:white}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
-.card{background:var(--panel);border:1px solid var(--line);
-border-radius:12px;padding:17px;margin-bottom:14px}
-.stat{font-size:25px;font-weight:bold;color:var(--gold);margin-top:10px}
-.card small{color:var(--muted)}
-.card h3{margin:8px 0;font-size:15px}
-.section-head{display:flex;justify-content:space-between;align-items:center;
-gap:12px;flex-wrap:wrap;margin:23px 0 12px}
-input,textarea,select{background:#09182b;border:1px solid var(--line);
-color:var(--text);border-radius:7px;padding:11px;width:100%;outline:none}
-input:focus,textarea:focus,select:focus{border-color:var(--gold)}
-label{display:block;color:var(--muted);font-size:12px;margin:12px 0 6px}
-.project{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.empty{text-align:center;padding:30px;color:var(--muted)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-.scene{background:#0b192c;border:1px solid var(--line);padding:13px;
-border-radius:9px;margin:9px 0;display:flex;gap:12px;align-items:flex-start}
-.scene-number{background:var(--gold);color:#152239;border-radius:6px;
-padding:9px;font-weight:bold}
-.timeline{background:#09182b;border:1px solid var(--line);
-border-radius:10px;padding:15px;overflow:auto}
-.track{height:42px;background:#142a45;border-radius:6px;margin:10px 0;
-display:flex;align-items:center;padding:0 10px;color:var(--muted);font-size:12px}
-.notice{border-left:3px solid var(--gold);padding:12px 14px;
-background:#17263b;color:#c7d2e0;font-size:13px;margin:14px 0}
-.media-preview{display:flex;flex-wrap:wrap;gap:10px}
-.media-preview img,.media-preview video{width:145px;height:100px;
-object-fit:cover;border-radius:7px;background:#09182b}
-footer{text-align:center;color:var(--muted);padding:25px;font-size:11px}
-@media(max-width:760px){
- .layout{display:block}
- nav{width:100%;display:flex;overflow-x:auto;padding:8px;gap:5px;
- border-right:0;border-bottom:1px solid var(--line)}
- .nav-label{display:none}
- .nav-btn{white-space:nowrap;width:auto;padding:10px;font-size:12px}
- main{padding:16px}
- header{padding:0 12px}
- .brand strong{font-size:14px}
- .hero h1{font-size:24px}
-}
-</style>
+<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><span>SC</span><i>▶</i></div>
+      <div><strong>SceneCraft</strong><small>AI STUDIO</small></div>
+    </div>
+    <nav id="mainNav">
+      <button class="nav-link active" data-view="dashboard">⌂ <span>Dashboard</span></button>
+      <button class="nav-link" data-view="script">✎ <span>Script & Story</span></button>
+      <button class="nav-link" data-view="storyboard">▦ <span>Storyboard</span></button>
+      <button class="nav-link" data-view="editor">▤ <span>Timeline Editor</span></button>
+      <button class="nav-link" data-view="media">▧ <span>Media Library</span></button>
+      <button class="nav-link" data-view="audio">♫ <span>Voice & Audio</span></button>
+      <button class="nav-link" data-view="captions">▤ <span>Captions</span></button>
+      <button class="nav-link" data-view="export">⇧ <span>Export</span></button>
+      <button class="nav-link" data-view="learn">ⓘ <span>Learning Centre</span></button>
+      <button class="nav-link" data-view="settings">⚙ <span>Settings</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="offline-pill"><span class="status-dot"></span><span id="connectionText">Checking connection…</span></div>
+      <small>Projects are saved on this device.</small>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="menuBtn" aria-label="Open menu">☰</button>
+      <div><div class="eyebrow">YOUR CREATIVE WORKSPACE</div><div class="top-title" id="pageTitle">Dashboard</div></div>
+      <div class="top-actions"><span class="save-state" id="saveState">All changes saved</span><button class="btn btn-gold" id="newProjectTop">＋ New Project</button></div>
+    </header>
 
-<header>
- <div class="brand">
-  <div class="logo">🎬</div>
-  <div><strong>SceneCraft AI</strong><small>STUDIO</small></div>
- </div>
- <div class="status" id="connection">● Checking connection</div>
-</header>
+    <section class="view active" id="view-dashboard">
+      <div class="hero">
+        <div class="hero-copy"><span class="eyebrow gold">CREATE WITHOUT LIMITS</span><h1>Your next great story<br><em>starts here.</em></h1>
+        <p>Plan scenes, write scripts, organise your media and build video projects — online or offline.</p>
+        <button class="btn btn-gold" id="heroNew">＋ Start a project</button></div>
+        <div class="hero-art"><div class="reel">◉</div><div class="clapper"><div class="clapper-top"></div><div class="clapper-body">SCENE<br><b>CRAFT</b></div></div><div class="film-strip">▰ ▰ ▰ ▰ ▰</div></div>
+      </div>
+      <div class="section-head"><div><div class="eyebrow">WORKSPACE</div><h2>Your projects</h2></div><button class="btn btn-outline" id="importProjectBtn">Import project</button></div>
+      <div class="project-grid" id="projectGrid"></div>
+      <div class="empty-state" id="emptyProjects"><div class="empty-icon">▱</div><h3>Your studio is ready</h3><p>Create your first project to begin writing and arranging your film.</p><button class="btn btn-gold" id="emptyNew">Create first project</button></div>
+    </section>
 
-<div class="layout">
-<nav>
- <div class="nav-label">WORKSPACE</div>
- <button class="nav-btn active" data-page="dashboard">⌂ Dashboard</button>
- <button class="nav-btn" data-page="create">✦ Movie Creator</button>
- <button class="nav-btn" data-page="storyboard">▤ Storyboard</button>
- <button class="nav-btn" data-page="editor">▣ Video Editor</button>
- <div class="nav-label">PRODUCTION</div>
- <button class="nav-btn" data-page="media">▧ Media Library</button>
- <button class="nav-btn" data-page="audio">♫ Audio Studio</button>
- <button class="nav-btn" data-page="export">⇧ Export</button>
- <div class="nav-label">SUPPORT</div>
- <button class="nav-btn" data-page="learn">◉ Learning Centre</button>
- <button class="nav-btn" data-page="settings">⚙ Settings</button>
-</nav>
+    <section class="view" id="view-script">
+      <div class="view-heading"><div><div class="eyebrow">DEVELOP YOUR IDEA</div><h1>Script & Story</h1><p>Write your film concept, outline and scene dialogue.</p></div><button class="btn btn-gold" id="saveScript">Save script</button></div>
+      <div class="panel two-col"><div><label>Project</label><select id="scriptProject"></select><label>Film title</label><input id="scriptTitle" placeholder="Give your story a title"><label>Genre</label><select id="scriptGenre"><option>Drama</option><option>Action</option><option>Comedy</option><option>Thriller</option><option>Documentary</option><option>Romance</option><option>Animation</option><option>Faith & Inspirational</option><option>Other</option></select><label>Story idea / logline</label><textarea id="scriptIdea" rows="5" placeholder="A one or two sentence description of your story…"></textarea></div>
+      <div><label>Script / screenplay</label><textarea id="scriptBody" class="script-area" rows="19" placeholder="FADE IN:
 
-<main>
+EXT. LOCATION — DAY
 
-<section class="page active" id="dashboard">
- <div class="hero">
-  <small class="gold">YOUR CREATIVE WORLD, ONE STUDIO</small>
-  <h1>Welcome to SceneCraft AI Studio</h1>
-  <p>Create stories, plan movie scenes, organise media and build your next production. Your local projects are designed to remain available offline after the application has been cached.</p>
-  <div class="actions">
-   <button class="btn" onclick="showPage('create')">＋ Create a Movie</button>
-   <button class="btn secondary" onclick="showPage('editor')">Open Editor</button>
-  </div>
- </div>
- <div class="grid">
-  <div class="card"><small>MY PROJECTS</small><div class="stat" id="projectCount">0</div></div>
-  <div class="card"><small>CONNECTION</small><div class="stat" id="onlineStat">Checking</div></div>
-  <div class="card"><small>WORKSPACE</small><div class="stat">Local</div><small>Browser storage</small></div>
- </div>
- <div class="section-head"><h2>Recent Projects</h2>
- <button class="btn secondary" onclick="showPage('create')">New Project</button></div>
- <div id="projectList" class="grid"></div>
- <div class="notice">Projects are saved in this browser. Export backups regularly. Cloud synchronisation will be added separately.</div>
-</section>
+Describe what we see…
 
-<section class="page" id="create">
- <h1>Movie Creator</h1>
- <p>Start a new film, trailer, advertisement or video project.</p>
- <div class="card">
-  <h2>New Production</h2>
-  <label>Project title</label>
-  <input id="projectTitle" placeholder="Enter your movie title">
-  <label>Production type</label>
-  <select id="projectType">
-   <option>Movie</option><option>Short Film</option><option>Trailer</option>
-   <option>Advertisement</option><option>YouTube Video</option>
-   <option>Social Media Video</option>
-  </select>
-  <label>Story idea</label>
-  <textarea id="projectIdea" rows="5" placeholder="Describe the story you want to create..."></textarea>
-  <div class="actions"><button class="btn" onclick="createProject()">Create Project</button></div>
- </div>
- <div class="card">
-  <h2>AI Creation Services</h2>
-  <p>Online AI script, image and video generation will be connected through verified providers in a later stage. No paid provider is enabled in this foundation.</p>
-  <span class="gold">AI integrations: Planned</span>
- </div>
-</section>
+CHARACTER
+Write dialogue here…"></textarea><div class="hint">Your writing is saved locally on this device. Use Export Project to make a backup.</div></div></div>
+    </section>
 
-<section class="page" id="storyboard">
- <h1>Storyboard & Scene Planner</h1>
- <p>Build your story one scene at a time.</p>
- <div class="card">
-  <label>Choose project</label>
-  <select id="sceneProject"></select>
-  <label>Scene title</label>
-  <input id="sceneTitle" placeholder="Example: The First Encounter">
-  <label>Scene description</label>
-  <textarea id="sceneDescription" rows="4" placeholder="Describe what happens in this scene..."></textarea>
-  <div class="actions"><button class="btn" onclick="addScene()">＋ Add Scene</button></div>
- </div>
- <div id="sceneList"></div>
-</section>
+    <section class="view" id="view-storyboard">
+      <div class="view-heading"><div><div class="eyebrow">VISUAL PLANNING</div><h1>Storyboard</h1><p>Break your story into shots and arrange the order.</p></div><button class="btn btn-gold" id="addScene">＋ Add scene</button></div>
+      <div class="toolbar"><select id="storyProject"></select><span class="hint">Use the arrows on each scene to change its order.</span></div>
+      <div class="scene-list" id="sceneList"></div>
+    </section>
 
-<section class="page" id="editor">
- <h1>Video Editor</h1>
- <p>Organise your production and prepare your editing timeline.</p>
- <div class="toolbar">
-  <button class="btn secondary" onclick="document.getElementById('mediaFiles').click()">＋ Import Media</button>
-  <button class="btn secondary" onclick="showPage('storyboard')">Open Storyboard</button>
-  <button class="btn secondary" onclick="showPage('audio')">Audio Studio</button>
- </div>
- <div class="card">
-  <h2>Preview Workspace</h2>
-  <video id="preview" controls style="width:100%;max-height:350px;background:#050a12;border-radius:8px"></video>
-  <p id="previewMessage">Import a local video to preview it here.</p>
- </div>
- <div class="card">
-  <h2>Editing Timeline</h2>
-  <div class="timeline">
-   <small>VIDEO TRACK</small>
-   <div class="track" id="videoTrack">Your video clips will appear here</div>
-   <small>AUDIO TRACK</small>
-   <div class="track" id="audioTrack">Your audio clips will appear here</div>
-   <small>TEXT / CAPTIONS TRACK</small>
-   <div class="track">Captions and titles</div>
-  </div>
-  <p>Advanced trimming, transitions, effects and final rendering will be implemented in the editing-engine stage.</p>
- </div>
-</section>
+    <section class="view" id="view-editor">
+      <div class="view-heading"><div><div class="eyebrow">ASSEMBLE YOUR FILM</div><h1>Timeline Editor</h1><p>Arrange scenes, set durations and preview a simple storyboard video.</p></div><button class="btn btn-gold" id="previewFilm">▶ Preview</button></div>
+      <div class="toolbar"><select id="editorProject"></select><span class="hint">Scene-based assembly • local project data</span></div>
+      <div class="preview-panel"><div class="preview-screen" id="previewScreen"><div class="preview-placeholder"><div class="play-symbol">▶</div><span>Select Preview to play your scene sequence</span></div></div><div class="preview-meta"><strong id="previewTitle">No project selected</strong><span id="previewDuration">0 seconds</span></div></div>
+      <div class="timeline" id="timeline"></div>
+      <div class="hint warning-hint">This starter editor assembles a scene-based preview. It is not yet a multi-track professional editor for frame-accurate trimming of arbitrary source videos.</div>
+    </section>
 
-<section class="page" id="media">
- <h1>Media Library</h1>
- <p>Import local video, images and audio for your projects.</p>
- <div class="card">
-  <input type="file" id="mediaFiles" multiple accept="image/*,video/*,audio/*">
-  <div class="notice">Selected media is available for this browser session. Persistent media storage will be implemented in a later stage.</div>
-  <div class="media-preview" id="mediaPreview"></div>
- </div>
-</section>
+    <section class="view" id="view-media">
+      <div class="view-heading"><div><div class="eyebrow">YOUR ASSETS</div><h1>Media Library</h1><p>Import photos, video clips and audio files from your device.</p></div><label class="btn btn-gold file-button">＋ Add media<input id="mediaInput" type="file" accept="image/*,video/*,audio/*" multiple hidden></label></div>
+      <div class="toolbar"><select id="mediaProject"></select><span class="hint">Media stays in this browser on this device. Keep backups of important files.</span></div>
+      <div class="media-grid" id="mediaGrid"></div>
+    </section>
 
-<section class="page" id="audio">
- <h1>Audio Studio</h1>
- <p>Record narration and preview audio for your production.</p>
- <div class="card">
-  <h2>Voice Recording</h2>
-  <div class="actions">
-   <button class="btn" id="recordBtn" onclick="toggleRecording()">● Start Recording</button>
-   <button class="btn secondary" onclick="stopRecording()">Stop</button>
-  </div>
-  <p id="recordStatus">Microphone permission is requested when you start recording.</p>
-  <audio id="recordedAudio" controls style="width:100%;display:none"></audio>
-  <p><a id="downloadAudio" style="display:none;color:var(--gold)" download="scenecraft-narration.webm">Download recording</a></p>
- </div>
- <div class="card">
-  <h2>Music & Sound Effects</h2>
-  <button class="btn secondary" onclick="document.getElementById('audioFiles').click()">Import Audio</button>
-  <input hidden type="file" id="audioFiles" accept="audio/*" multiple>
-  <div id="audioItems"></div>
- </div>
-</section>
+    <section class="view" id="view-audio">
+      <div class="view-heading"><div><div class="eyebrow">SOUND DESIGN</div><h1>Voice & Audio</h1><p>Record narration or import music and sound effects.</p></div></div>
+      <div class="panel"><div class="toolbar"><select id="audioProject"></select><span class="hint">Microphone permission is requested by your browser.</span></div><div class="record-card"><div class="mic-icon">♫</div><div><h3>Voice recorder</h3><p id="recordStatus">Ready to record narration.</p></div><div class="record-actions"><button class="btn btn-gold" id="recordBtn">● Start recording</button><button class="btn btn-outline" id="stopRecord" disabled>Stop</button></div></div><audio id="audioPlayback" controls hidden></audio><div id="audioSaved" class="asset-list"></div><div class="hint">Recordings are stored locally with the selected project. Large recordings use device storage.</div></div>
+    </section>
 
-<section class="page" id="export">
- <h1>Export & Share</h1>
- <p>Prepare your project for delivery.</p>
- <div class="card">
-  <h2>Export Settings</h2>
-  <label>Video format</label>
-  <select><option>MP4 (planned export engine)</option><option>WebM (browser-supported export)</option></select>
-  <label>Aspect ratio</label>
-  <select><option>16:9 Widescreen</option><option>9:16 Portrait</option><option>1:1 Square</option></select>
-  <label>Resolution</label>
-  <select><option>1080p</option><option>720p</option><option>480p</option><option>4K (subject to device support)</option></select>
-  <div class="notice">The final video rendering engine is not connected yet. These are planned export settings, not an active movie export.</div>
-  <button class="btn secondary" onclick="backupProjects()">Download Project Backup</button>
- </div>
-</section>
+    <section class="view" id="view-captions">
+      <div class="view-heading"><div><div class="eyebrow">ACCESSIBILITY</div><h1>Captions & Subtitles</h1><p>Create subtitle entries and export them as an SRT file.</p></div><button class="btn btn-gold" id="addCaption">＋ Add caption</button></div>
+      <div class="panel"><div class="toolbar"><select id="captionProject"></select><button class="btn btn-outline" id="exportSrt">Export .SRT</button></div><div id="captionList"></div></div>
+    </section>
 
-<section class="page" id="learn">
- <h1>Video Learning Centre</h1>
- <p>Learn how to use SceneCraft step by step.</p>
- <div class="grid">
-  <div class="card"><h3>01. Getting Started</h3><p>Understand the dashboard and create your first project.</p></div>
-  <div class="card"><h3>02. Movie Creation</h3><p>Develop a story, plan scenes and organise a storyboard.</p></div>
-  <div class="card"><h3>03. Video Editing</h3><p>Learn about timelines, clips, transitions and effects.</p></div>
-  <div class="card"><h3>04. Audio Production</h3><p>Record narration and organise music and sound effects.</p></div>
-  <div class="card"><h3>05. Exporting</h3><p>Prepare your movie for different platforms and screens.</p></div>
-  <div class="card"><h3>06. Offline & Online</h3><p>Understand local projects, backups and online AI tools.</p></div>
- </div>
- <div class="notice">Original video lessons and downloadable tutorials will be created to match the completed application.</div>
-</section>
+    <section class="view" id="view-export">
+      <div class="view-heading"><div><div class="eyebrow">DELIVER YOUR WORK</div><h1>Export & Backup</h1><p>Save a portable project backup or export your storyboard preview.</p></div></div>
+      <div class="export-grid"><div class="panel"><div class="export-icon">⬇</div><h3>Project backup</h3><p>Download the selected project's script, scenes, captions and media references as a JSON file.</p><select id="exportProject"></select><button class="btn btn-gold" id="downloadProject">Download project backup</button></div><div class="panel"><div class="export-icon">▶</div><h3>Storyboard video</h3><p>Render a simple scene-card video using the browser's recording support. Results depend on your device and browser.</p><select id="renderProject"></select><label>Format</label><select id="renderRatio"><option value="16:9">Landscape 16:9</option><option value="9:16">Portrait 9:16</option><option value="1:1">Square 1:1</option></select><button class="btn btn-gold" id="renderVideo">Render storyboard video</button><p id="renderStatus" class="hint"></p></div></div>
+      <div class="panel"><h3>What this export does</h3><p>The current renderer creates a video from your scene titles, descriptions and attached still images. It does not yet combine arbitrary imported video clips into a full multi-track edit. Use project backup to preserve all editable project information.</p></div>
+    </section>
 
-<section class="page" id="settings">
- <h1>Studio Settings</h1>
- <p>Manage your local workspace.</p>
- <div class="card">
-  <h2>Storage & Privacy</h2>
-  <p>Projects are saved in this browser using local storage. Clearing browser data may remove them.</p>
-  <button class="btn secondary" onclick="backupProjects()">Export Project Backup</button>
-  <div class="notice">Cloud backup, account services and synchronisation are not enabled yet. No payment or subscription is required for this foundation.</div>
- </div>
-</section>
+    <section class="view" id="view-learn">
+      <div class="view-heading"><div><div class="eyebrow">LEARN AT YOUR PACE</div><h1>Learning Centre</h1><p>Practical instructions for using this version of SceneCraft.</p></div></div>
+      <div class="lesson-grid">
+        <article class="panel lesson"><span class="lesson-num">01</span><h3>Start a project</h3><p>From Dashboard, choose New Project, enter a title and select a format. Your project is saved automatically in this browser.</p></article>
+        <article class="panel lesson"><span class="lesson-num">02</span><h3>Write your story</h3><p>Open Script & Story. Select your project, add a logline and write your screenplay. Select Save script when finished.</p></article>
+        <article class="panel lesson"><span class="lesson-num">03</span><h3>Build scenes</h3><p>In Storyboard, add scenes, enter shot descriptions and set their duration. Use the up and down arrows to arrange the sequence.</p></article>
+        <article class="panel lesson"><span class="lesson-num">04</span><h3>Add your media</h3><p>Use Media Library to import images, video and audio from your device. Browser storage limits vary. Export a backup regularly.</p></article>
+        <article class="panel lesson"><span class="lesson-num">05</span><h3>Record narration</h3><p>Open Voice & Audio, allow microphone access and press Start recording. Stop to save the recording to your project.</p></article>
+        <article class="panel lesson"><span class="lesson-num">06</span><h3>Create subtitles</h3><p>In Captions, add subtitle text with start and end times. Export .SRT to use in compatible video editors.</p></article>
+        <article class="panel lesson"><span class="lesson-num">07</span><h3>Preview and export</h3><p>Timeline Editor previews your scene sequence. Export & Backup lets you download project JSON or render a simple scene-card video.</p></article>
+        <article class="panel lesson"><span class="lesson-num">08</span><h3>Work offline</h3><p>Open the app once while online so its files can be cached. Then revisit the installed app or site. Browser support and storage permissions affect offline use.</p></article>
+      </div>
+      <div class="panel"><h3>Important: AI and cloud features</h3><p>This release is an offline-first creative workspace. It does not claim to generate AI images or AI videos by itself. AI generation requires a connected provider and may have changing free limits. No paid provider or billing account is configured in this package.</p></div>
+    </section>
 
-<footer>SceneCraft AI Studio · Create · Edit · Produce · Share</footer>
-</main>
+    <section class="view" id="view-settings">
+      <div class="view-heading"><div><div class="eyebrow">STUDIO PREFERENCES</div><h1>Settings</h1><p>Manage local storage and understand online features.</p></div></div>
+      <div class="panel settings-panel"><h3>Storage & privacy</h3><p>Projects are stored in this browser's local storage. Imported media and recordings use browser-managed local storage where available.</p><div class="setting-row"><span>Connection status</span><strong id="settingsConnection">Checking…</strong></div><div class="setting-row"><span>Projects on this device</span><strong id="projectCount">0</strong></div><div class="setting-row"><span>AI provider</span><strong>Not configured</strong></div><div class="setting-row"><span>Cloud backup</span><strong>Not connected</strong></div><button class="btn btn-outline" id="downloadAll">Export all project backups</button></div>
+      <div class="panel"><h3>Online AI services</h3><p>When a genuinely free provider is selected in a future integration, connect it deliberately and review its privacy policy and usage limits first. Never paste secret API keys into public GitHub files or client-side code.</p><p class="hint">This app does not send your scripts or media to a server in this release.</p></div>
+      <div class="panel danger-panel"><h3>Clear local workspace</h3><p>This permanently removes projects saved in this browser. Download your backups before continuing.</p><button class="btn btn-danger" id="clearData">Delete all local projects</button></div>
+    </section>
+    <footer>SCENECRAFT AI STUDIO <span>•</span> Offline-first creative workspace <span>•</span> Build 1.0.0</footer>
+  </main>
 </div>
-
-<script>
-let projects=[];
-try {
- projects=JSON.parse(localStorage.getItem("scenecraft_projects")||"[]");
- if(!Array.isArray(projects)) projects=[];
-} catch(error) { projects=[]; }
-
-let currentProject=null;
-let recorder=null;
-let recordingStream=null;
-let chunks=[];
-
-function save(){
- localStorage.setItem("scenecraft_projects",JSON.stringify(projects));
- renderProjects();
-}
-
-function showPage(id){
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- document.querySelectorAll(".nav-btn").forEach(b=>{
-  b.classList.toggle("active",b.dataset.page===id);
- });
- document.getElementById(id).classList.add("active");
- if(id==="storyboard")renderScenes();
- if(id==="dashboard")renderProjects();
-}
-
-document.querySelectorAll(".nav-btn").forEach(button=>{
- button.addEventListener("click",()=>showPage(button.dataset.page));
-});
-
-function createProject(){
- const title=document.getElementById("projectTitle").value.trim();
- if(!title){alert("Please enter a project title.");return;}
- const project={
-  id:Date.now(),
-  title:title,
-  type:document.getElementById("projectType").value,
-  idea:document.getElementById("projectIdea").value,
-  scenes:[],
-  created:new Date().toLocaleDateString()
- };
- projects.unshift(project);
- currentProject=project.id;
- save();
- document.getElementById("projectTitle").value="";
- document.getElementById("projectIdea").value="";
- showPage("storyboard");
-}
-
-function renderProjects(){
- document.getElementById("projectCount").textContent=projects.length;
- const box=document.getElementById("projectList");
- box.innerHTML="";
- if(!projects.length){
-  box.innerHTML='<div class="empty">No projects yet. Create your first movie.</div>';
-  return;
- }
- projects.forEach(project=>{
-  const card=document.createElement("div");
-  card.className="card project";
-  const info=document.createElement("div");
-  const title=document.createElement("strong");
-  title.textContent="🎬 "+project.title;
-  const details=document.createElement("small");
-  details.textContent=project.type+" · "+project.created;
-  const open=document.createElement("button");
-  open.className="btn secondary";
-  open.textContent="Open";
-  open.onclick=()=>{
-   currentProject=project.id;
-   showPage("storyboard");
-  };
-  info.append(title,document.createElement("br"),details);
-  card.append(info,open);
-  box.append(card);
- });
- updateProjectSelect();
-}
-
-function updateProjectSelect(){
- const select=document.getElementById("sceneProject");
- const previous=select.value;
- select.innerHTML="";
- projects.forEach(project=>{
-  const option=document.createElement("option");
-  option.value=project.id;
-  option.textContent=project.title;
-  select.append(option);
- });
- if(currentProject)select.value=currentProject;
- else if(previous)select.value=previous;
-}
-
-function addScene(){
- const project=projects.find(p=>p.id===Number(document.getElementById("sceneProject").value));
- if(!project){alert("Create a project first.");return;}
- const title=document.getElementById("sceneTitle").value.trim();
- if(!title){alert("Enter a scene title.");return;}
- project.scenes.push({
-  title:title,
-  description:document.getElementById("sceneDescription").value
- });
- currentProject=project.id;
- save();
- document.getElementById("sceneTitle").value="";
- document.getElementById("sceneDescription").value="";
- renderScenes();
-}
-
-function renderScenes(){
- updateProjectSelect();
- const project=projects.find(p=>p.id===Number(document.getElementById("sceneProject").value))
-  ||projects.find(p=>p.id===currentProject);
- const box=document.getElementById("sceneList");
- box.innerHTML="";
- if(!project){
-  box.innerHTML='<div class="empty">Create a movie project before adding scenes.</div>';
-  return;
- }
- currentProject=project.id;
- if(!project.scenes.length){
-  box.innerHTML='<div class="empty">Your storyboard is ready. Add your first scene above.</div>';
-  return;
- }
- project.scenes.forEach((scene,index)=>{
-  const card=document.createElement("div");
-  card.className="scene";
-  const number=document.createElement("div");
-  number.className="scene-number";
-  number.textContent=index+1;
-  const content=document.createElement("div");
-  const title=document.createElement("strong");
-  title.textContent=scene.title;
-  const description=document.createElement("p");
-  description.textContent=scene.description;
-  content.append(title,description);
-  card.append(number,content);
-  box.append(card);
- });
-}
-
-document.getElementById("sceneProject").addEventListener("change",renderScenes);
-
-document.getElementById("mediaFiles").addEventListener("change",event=>{
- const box=document.getElementById("mediaPreview");
- [...event.target.files].forEach(file=>{
-  const url=URL.createObjectURL(file);
-  if(file.type.startsWith("image/")){
-   const image=document.createElement("img");
-   image.src=url;
-   image.alt=file.name;
-   box.append(image);
-  }else if(file.type.startsWith("video/")){
-   const video=document.createElement("video");
-   video.src=url;
-   video.controls=true;
-   box.append(video);
-   document.getElementById("preview").src=url;
-   document.getElementById("previewMessage").textContent=file.name;
-   document.getElementById("videoTrack").textContent=file.name;
-  }
- });
-});
-
-document.getElementById("audioFiles").addEventListener("change",event=>{
- [...event.target.files].forEach(file=>{
-  const audio=document.createElement("audio");
-  audio.src=URL.createObjectURL(file);
-  audio.controls=true;
-  audio.style.width="100%";
-  document.getElementById("audioItems").append(audio);
-  document.getElementById("audioTrack").textContent=file.name;
- });
-});
-
-async function toggleRecording(){
- if(recorder&&recorder.state==="recording"){
-  stopRecording();
-  return;
- }
- try{
-  recordingStream=await navigator.mediaDevices.getUserMedia({audio:true});
-  chunks=[];
-  recorder=new MediaRecorder(recordingStream);
-  recorder.ondataavailable=event=>{
-   if(event.data.size)chunks.push(event.data);
-  };
-  recorder.onstop=()=>{
-   const blob=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});
-   const url=URL.createObjectURL(blob);
-   const audio=document.getElementById("recordedAudio");
-   audio.src=url;
-   audio.style.display="block";
-   const link=document.getElementById("downloadAudio");
-   link.href=url;
-   link.style.display="inline-block";
-   if(recordingStream){
-    recordingStream.getTracks().forEach(track=>track.stop());
-    recordingStream=null;
-   }
-   document.getElementById("recordStatus").textContent="Recording ready. Download a copy to keep it.";
-  };
-  recorder.start();
-  document.getElementById("recordBtn").textContent="● Recording...";
-  document.getElementById("recordStatus").textContent="Recording in progress.";
- }catch(error){
-  document.getElementById("recordStatus").textContent="Microphone unavailable or permission denied. Use a secure connection and allow microphone access.";
- }
-}
-
-function stopRecording(){
- if(recorder&&recorder.state==="recording"){
-  recorder.stop();
-  document.getElementById("recordBtn").textContent="● Start Recording";
- }
-}
-
-function backupProjects(){
- const blob=new Blob([JSON.stringify(projects,null,2)],{type:"application/json"});
- const url=URL.createObjectURL(blob);
- const link=document.createElement("a");
- link.href=url;
- link.download="scenecraft-project-backup.json";
- link.click();
- setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-
-function updateConnection(){
- const online=navigator.onLine;
- document.getElementById("connection").textContent=online?"● Online":"● Offline";
- document.getElementById("connection").style.color=online?"var(--green)":"var(--gold)";
- document.getElementById("onlineStat").textContent=online?"Online":"Offline";
-}
-window.addEventListener("online",updateConnection);
-window.addEventListener("offline",updateConnection);
-
-updateConnection();
-renderProjects();
-
-/* REGISTER THE OFFLINE SERVICE WORKER */
-if("serviceWorker" in navigator){
- window.addEventListener("load",()=>{
-  navigator.serviceWorker.register("./sw.js")
-   .then(()=>console.log("SceneCraft offline service worker registered."))
-   .catch(error=>console.error("Service worker registration failed:",error));
- });
-}
-</script>
-</body>
-</html>
+<div class="modal-backdrop" id="newModal"><div class="modal"><button class="modal-close" id="closeModal">×</button><div class="eyebrow gold">NEW CREATION</div><h2>Create a project</h2><label>Project name</label><input id="newName" placeholder="My first film"><label>Project format</label><select id="newFormat"><option value="16:9">Landscape film — 16:9</option><option value="9:16">Portrait video — 9:16</option><option value="1:1">Square video — 1:1</option></select><div class="modal-actions"><button class="btn btn-outline" id="cancelNew">Cancel</button><button class="btn btn-gold" id="createProject">Create project</button></div></div></div>
+<input type="file" id="projectFile" accept=".json,application/json" hidden>
+<script src="./app.js"></script>
+</body></html>

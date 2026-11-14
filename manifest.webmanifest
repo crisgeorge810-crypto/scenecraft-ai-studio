@@ -1,28 +1,18 @@
-
 {
-  "id": "./",
   "name": "SceneCraft AI Studio",
   "short_name": "SceneCraft",
-  "description": "Create, edit, produce and share movies with SceneCraft AI Studio.",
-  "start_url": "./",
+  "description": "Offline-first video planning and editing workspace",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "any",
-  "background_color": "#081426",
-  "theme_color": "#081426",
-  "categories": ["video", "entertainment", "productivity"],
+  "background_color": "#081a32",
+  "theme_color": "#081a32",
   "icons": [
     {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
