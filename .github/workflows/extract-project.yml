@@ -20,25 +20,27 @@ jobs:
           ZIP="SceneCraft-AI-Studio-Complete-Starter.zip"
 
           if [ ! -f "$ZIP" ]; then
-            echo "ERROR: Project ZIP not found: $ZIP"
-            echo "Files in repository:"
+            echo "Project ZIP not found"
             ls -la
             exit 1
           fi
 
           mkdir -p /tmp/scenecraft
           unzip -o "$ZIP" -d /tmp/scenecraft
-
           cp -a /tmp/scenecraft/SceneCraft-AI-Studio/. .
 
       - name: Save extracted project
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add -A
 
+          # Do not push the Pages workflow using this token.
+          git reset -- .github/workflows/pages.yml
+
           if git diff --cached --quiet; then
-            echo "No changes to save."
+            echo "No project changes to save."
           else
             git commit -m "Install complete SceneCraft AI Studio project"
             git push
