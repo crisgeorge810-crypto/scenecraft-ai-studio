@@ -1,0 +1,43 @@
+
+{
+  "name": "hotel-manager-pro",
+  "version": "1.0.0",
+  "description": "Hotel Manager Pro Windows Desktop Application",
+  "main": "main.cjs",
+  "author": "Hotel Manager Pro",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.hotelmanagerpro.desktop",
+    "productName": "Hotel Manager Pro",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "index.html",
+      "main.cjs",
+      "package.json",
+      "hotel-icon-192.png",
+      "hotel-icon-512.png"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
